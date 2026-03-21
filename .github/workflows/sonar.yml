@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  CI:
     name: Build
     runs-on: [Linux]
     steps:
@@ -38,8 +38,8 @@ jobs:
       - name: trivy image scan
         run: trivy image aviseksaha31/tic-toc-toe:latest > trivyimage.txt
 
-  deploy:
-   needs: build-analyze-scan   
+  CD:
+   needs: CI   
    runs-on: [Linux]
    steps:
       - name: docker pull image
