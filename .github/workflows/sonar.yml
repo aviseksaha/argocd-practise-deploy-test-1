@@ -28,3 +28,5 @@ jobs:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: npm install dependency
         run: npm ci
+      - name: trivy file scan
+        run: trivy fs . > trivyfs.txt
