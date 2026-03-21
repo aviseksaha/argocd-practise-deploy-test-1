@@ -27,4 +27,5 @@ jobs:
       #   env:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: npm install dependency
-        run: npm install
+        uses: actions/checkout@v6
+        run: npm ci
