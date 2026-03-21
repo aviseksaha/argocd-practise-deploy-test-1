@@ -1,4 +1,4 @@
-name: Build,Analyze,scan
+name: Build, Analyze and Scan
 
 on:
   push:
@@ -7,51 +7,49 @@ on:
 
 
 jobs:
-  build-analyze-scan:
+  build:
     name: Build
-    runs-on: [self-hosted]
+    runs-on: [Linux]
     steps:
-      - name: Checkout code
+      - name: checkout code
         uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-
-      - name: Build and analyze with SonarQube
+      - name: build and analysis the code
         uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          
+      # If you wish to fail your job when the Quality Gate is red, uncomment the
+      # following lines. This would typically be used to fail a deployment.
+      # - uses: sonarsource/sonarqube-quality-gate-action@master
+      #   timeout-minutes: 5
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: npm install dependency
-        run: npm install
-
-      - name: Trivy file scan
+        run: npm ci
+      - name: trivy file scan
         run: trivy fs . > trivyfs.txt
-
-      - name: Docker Build and push
+      - name: docker build and push
         run: |
-          docker build -t tic-tac-toe .
-          docker tag tic-tac-toe sevenajay/tic-tac-toe:latest
-          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-          docker push sevenajay/tic-tac-toe:latest
-        env:
-          DOCKER_CLI_ACI: 1
-
-      - name: Image scan
-        run: trivy image sevenajay/tic-tac-toe:latest > trivyimage.txt
+          docker build -t tic-toc-toe .
+          docker tag tic-toc-toe aviseksaha31/tic-toc-toe:latest
+          docker login -u ${{ vars.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+          docker push aviseksaha31/tic-toc-toe:latest
+      - name: trivy image scan
 
   deploy:
    needs: build-analyze-scan   
-   runs-on: [self-hosted]
+   runs-on: [Linux]
    steps:
       - name: docker pull image
-        run: docker pull sevenajay/tic-tac-toe:latest
+        run: docker pull aviseksaha31/tic-tac-toe:latest
 
       - name: Image scan
-        run: trivy image sevenajay/tic-tac-toe:latest > trivyimagedeploy.txt  
+        run: trivy image aviseksaha31/tic-tac-toe:latest > trivyimagedeploy.txt  
   
       - name: Deploy to container
-        run: docker run -d --name game -p 3000:3000 sevenajay/tic-tac-toe:latest
+        run: docker run -d --name game -p 3000:3000 aviseksaha31/tic-tac-toe:latest
 
       - name: Update kubeconfig
         run: aws eks --region ap-south-1 update-kubeconfig --name EKS_CLOUD
