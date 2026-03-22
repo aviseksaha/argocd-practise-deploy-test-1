@@ -2,20 +2,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tic-tac-toe
+  name: tic-toc-toe
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tic-tac-toe
+      app: tic-toc-toe
   template:
     metadata:
       labels:
-        app: tic-tac-toe
+        app: tic-toc-toe
     spec:
       containers:
-      - name: tic-tac-toe
-        image: aviseksaha31/tic-tac-toe:latest
+      - name: tic-toc-toe
+        image: aviseksaha31/tic-toc-toe:latest
         ports:
         - containerPort: 3000   # Use port 3000
 
@@ -23,10 +23,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: tic-tac-toe-service
+  name: tic-toc-toe-service
 spec:
   selector:
-    app: tic-tac-toe
+    app: tic-toc-toe
   ports:
   - protocol: TCP
     port: 80                 # Expose port 80
