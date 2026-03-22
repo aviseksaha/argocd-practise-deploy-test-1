@@ -59,4 +59,19 @@ jobs:
         run: aws eks --region ap-south-1 update-kubeconfig --name EKS_CLOUD
 
       - name: Deploy to kubernetes
-        run: kubectl apply -f deployment-service.yml        
+        run: kubectl apply -f deployment-service.yml
+
+  Destroy:
+   needs: CD
+   runs-on: [Linux]
+   steps:
+      - name: delete containers
+        run: |
+          docker stop game || true
+          docker rm game || true
+          docker rmi tic-toc-toe || true
+          docker rmi aviseksaha31/tic-toc-toe:latest || true
+
+      - name: delete kubernetes deployment
+        run: kubectl delete -f deployment-service.yml
+
