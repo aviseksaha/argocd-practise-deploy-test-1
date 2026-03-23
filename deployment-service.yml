@@ -5,6 +5,7 @@ metadata:
   name: tic-toc-toe
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: tic-toc-toe
@@ -17,18 +18,23 @@ spec:
       - name: tic-toc-toe
         image: aviseksaha31/tic-toc-toe:latest
         ports:
-        - containerPort: 3000   # Use port 3000
-
+        - containerPort: 3001   # Use port 
+        resources:
+          requests:
+            cpu: "5m"
+            memory: "64Mi"
+          limits:
+            cpu: "10m"
+            memory: "256Mi"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: tic-toc-toe-service
+  name: tic-toc-toe
 spec:
   selector:
     app: tic-toc-toe
   ports:
   - protocol: TCP
     port: 80                 # Expose port 80
-    targetPort: 3000
-  type: LoadBalancer
+    targetPort: 3001
