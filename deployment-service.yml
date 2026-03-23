@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: tic-toc-toe
+  namespace: tic-toc-toe
 spec:
   replicas: 1
   revisionHistoryLimit: 3
