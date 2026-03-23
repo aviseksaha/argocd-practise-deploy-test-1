@@ -45,15 +45,20 @@ jobs:
   CD:
    needs: CI   
    runs-on: [Linux]
+
+   permissions:
+    contents: write
+
    steps:
     - name: Checkout repo
       uses: actions/checkout@v4
-
+      with:
+        persist-credentials: true
 
     # 🔥 THIS IS THE KEY STEP
     - name: Update deployment YAML
       run: |
-        sed -i "s|image: .*|image: aviseksaha31/tic-toc-toe:${IMAGE_TAG}|" deployment-service.yml
+        sed -i "s|image: .*|image: aviseksaha31/tic-toc-toe:latest|" deployment-service.yml
 
     - name: Commit and push changes
       run: |
