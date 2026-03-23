@@ -46,32 +46,20 @@ jobs:
    needs: CI   
    runs-on: [Linux]
    steps:
-      - name: docker pull image
-        run: docker pull aviseksaha31/tic-toc-toe:latest
+    - name: Checkout repo
+      uses: actions/checkout@v4
 
-      - name: Image scan
-        run: trivy image aviseksaha31/tic-toc-toe:latest > trivyimagedeploy.txt  
-  
-      - name: Deploy to container
-        run: docker run -d --name game -p 3000:3000 aviseksaha31/tic-toc-toe:latest
 
-      - name: Update kubeconfig
-        run: aws eks --region ap-south-1 update-kubeconfig --name EKS_CLOUD
+    # 🔥 THIS IS THE KEY STEP
+    - name: Update deployment YAML
+      run: |
+        sed -i "s|image: .*|image: aviseksaha31/tic-toc-toe:${IMAGE_TAG}|" deployment-service.yml
 
-      - name: Deploy to kubernetes
-        run: kubectl apply -f deployment-service.yml
-
-  Destroy:
-   needs: CD
-   runs-on: [Linux]
-   steps:
-      - name: delete containers
-        run: |
-          docker stop game || true
-          docker rm game || true
-          docker rmi tic-toc-toe || true
-          docker rmi aviseksaha31/tic-toc-toe:latest || true
-
-      - name: delete kubernetes deployment
-        run: kubectl delete -f deployment-service.yml
+    - name: Commit and push changes
+      run: |
+        git config user.name "aviseksaha31"
+        git config user.email "avisek.saha31@gmail.com"
+        git add deployment-service.yml
+        git commit -m "Update image to ${IMAGE_TAG}" || echo "No changes"
+        git push
 
