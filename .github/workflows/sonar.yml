@@ -44,7 +44,7 @@ jobs:
         run: trivy image aviseksaha31/tic-toc-toe:latest > trivyimage.txt
 
   CD:
-    #needs: CI   
+   needs: CI   
    runs-on: [Linux]
 
    permissions:
