@@ -59,13 +59,13 @@ jobs:
     # 🔥 THIS IS THE KEY STEP
     - name: Update deployment YAML
       run: |
-        sed -i "s|image: .*|image: aviseksaha31/tic-toc-toe:latest|" deployment-service.yml
+        sed -i "s|image: .*|image: aviseksaha31/tic-toc-toe:latest|" manfests/deployment-service.yml
 
     - name: Commit and push changes
       run: |
         git config user.name "aviseksaha31"
         git config user.email "avisek.saha31@gmail.com"
-        git add deployment-service.yml
+        git add manifests/deployment-service.yml
         git commit -m "Update image to ${IMAGE_TAG}" || echo "No changes"
         git push
 
