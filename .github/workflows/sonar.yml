@@ -59,7 +59,7 @@ jobs:
     # 🔥 THIS IS THE KEY STEP
     - name: Update deployment YAML
       run: |
-        sed -i "s|image: .*|image: aviseksaha31/tic-toc-toe:latest|" manfests/deployment-service.yml
+        sed -i "s|image: .*|image: aviseksaha31/tic-toc-toe:latest|" manifests/deployment-service.yml
 
     - name: Commit and push changes
       run: |
