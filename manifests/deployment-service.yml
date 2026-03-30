@@ -19,7 +19,7 @@ spec:
       - name: tic-toc-toe
         image: aviseksaha31/tic-toc-toe:latest
         ports:
-        - containerPort: 3001   # Use port 
+        - containerPort: 3000   # Use port 
         resources:
           requests:
             cpu: "5m"
@@ -39,4 +39,4 @@ spec:
   ports:
   - protocol: TCP
     port: 80                 # Expose port 80
-    targetPort: 3001
+    targetPort: 3000
